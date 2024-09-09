@@ -1,16 +1,47 @@
 ---
-
+import Template from '../templates/Template.astro';
+import Components from '../components/Components.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Template>
+	<form action="" id="filters">
+		<select name="filter" id="filter">
+			<option value="footer">Footers</option>
+			<option value="nav">Navs</option>
+		</select>
+	</form>
+	<Components id="components" client:load/>
+</Template>
+
+
+<style is:global>
+	@import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+	
+	*,
+	*::before,
+	*::after {
+	  font-family: "SUSE", sans-serif;
+	  font-optical-sizing: auto;
+	  font-style: normal;
+	}
+</style>
+
+<script>
+	const select_element = document.querySelector("#filter");
+	const components = document.querySelector("#components");
+
+	filter_components(select_element?.value);
+
+	select_element?.addEventListener("change", (e) => filter_components(e.target?.value));
+
+	function filter_components(filter: string) {
+		if (!components) return;
+
+		let childrens: HTMLCollection = components.children;
+
+		for (var i = 0; i < childrens.length; i++) {
+			let child = childrens[i];
+			child.getAttribute("data-kind") === filter ? child.classList.remove("hidden") : child.classList.add("hidden")
+		}
+	}
+</script>

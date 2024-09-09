@@ -1,0 +1,26 @@
+---
+const components = await Astro.glob('./galery/*/*.astro');
+
+interface Props {
+	id: string
+}
+
+const { id } = Astro.props;
+---
+
+<main class="flex gap-4 flex-col" id={id}>
+	{
+		components.map(component => {
+			let path = component.file.split('/');
+			let data = path[path.length - 2];
+			let label = path.slice(path.length - 2, path.length).join('/');
+
+			return <div data-kind={data} class="hidden border-2 border-solid border-neutral-600 p-2 rounded-lg flex gap-2 flex-col">
+				<label class="block font-semibold font-mono text-center">{label}</label>
+				<div class="relative">
+					<component.default />
+				</div>
+			</div>
+		})
+	}
+</main>
